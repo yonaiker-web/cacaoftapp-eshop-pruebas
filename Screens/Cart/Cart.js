@@ -1,9 +1,12 @@
 //pagina principal del carrito de compras - Navigators/Main
-import React from 'react'
-import { StyleSheet, View, Dimensions, Button, TouchableOpacity } from 'react-native'
-import { Container, Text, Left, Right, H1, ListItem, Thumbnail, Body } from "native-base"
+import React, { useContext } from 'react'
+import { StyleSheet, View, Dimensions,  TouchableOpacity } from 'react-native'
+import { Container, Text, Left, Right, H1} from "native-base"
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { SwipeListView } from 'react-native-swipe-list-view'
+
+import AuthGlobal from '../../Context/store/AuthGlobal'
+import Login from '../User/Login'
 
 //obtenemos las dimensiones de la pantalla del celular
 var { height, width } = Dimensions.get("window");
@@ -14,9 +17,15 @@ import { connect } from 'react-redux'
 import * as actions from '../../Redux/Actions/cartActions'
 //archivo que contiene la lista de los productos agregados al carrito
 import CartItem from './CartItem'
+//archivo que contiene estilos para los botones
+import EasyButton from '../../Shared/StyledComponents/EasyButton'
 
 
 const Cart = (props) => {
+    //console.log("NAVEGACION", props.navigation.navigate);
+
+    const context = useContext(AuthGlobal)
+
     //variable del total del precio a pagar del carrito
     var total = 0;
     //hace la suma total del precio de los articulos en el carrito
@@ -24,7 +33,7 @@ const Cart = (props) => {
         return (total += cart.product.price)
     });
 
-    console.log(props.cartItems);
+    //console.log(props.cartItems);
     return (
         <>
             {props.cartItems.length
@@ -66,17 +75,35 @@ const Cart = (props) => {
                             </Text>
                         </Left>
                         <Right>
-                            <Button 
-                                title="Limpiar" 
+                            <EasyButton 
+                                danger
+                                medium
                                 //accion para limpiar el carrito de compras
                                 onPress={() => props.clearCart()}
-                            />
+                            >
+                                <Text style={{ color: "white"}}>Limpiar</Text>
+                            </EasyButton>
                         </Right>
-                        <Right style={{marginRight: 5}}>
-                            <Button 
-                                title="Verificar"
+                        <Right >
+                            {context.stateUser.isAuthenticated
+                            ? (
+                                <EasyButton 
+                                primary
+                                medium
                                 onPress={() => props.navigation.navigate('Checkout')}
-                            />
+                            >
+                                <Text style={{ color: "white"}}>Verificar</Text>
+                            </EasyButton>
+                            )
+                            : (
+                                <EasyButton
+                                    secondary
+                                    medium
+                                    onPress={() => props.navigation.navigate("Login")}
+                                >
+                                    <Text style={{ color: 'white' }}>Login</Text>
+                                </EasyButton>
+                            )}
                         </Right>
                     </View>
 

@@ -1,7 +1,7 @@
 //archivo del chequeo o transporte del carrito de compras - Navigator/CheckoutNavigator
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useState, useContext} from 'react'
 import { StyleSheet, Text, View, Button } from 'react-native'
-import { Item, Picker } from 'native-base'
+import { Item, Picker, Toast } from 'native-base'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
@@ -9,6 +9,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import FormContainer from '../../../Shared/Form/FormContainer'
 //archivo que contiene el modelo del input
 import Input from '../../../Shared/Form/Input'
+import AuthGlobal from '../../../Context/store/AuthGlobal'
 
 //para realizar la conexion con el storage de redux 
 import { connect } from 'react-redux'
@@ -18,6 +19,8 @@ const countries = require("../../../assets/data/countries.json")
 
 const Checkout = (props) => {
 
+    const context = useContext(AuthGlobal)
+
     //datos del formulario (los mismo que estan en la base de datos)
     const [orderItems, setOrderItems] = useState()
     const [address, setAddress] = useState()
@@ -26,9 +29,22 @@ const Checkout = (props) => {
     const [zip, setZip] = useState()
     const [country, setCountry] = useState()
     const [phone, setPhone] = useState()
+    const [user, setUser] = useState()
 
     useEffect(() => {
         setOrderItems(props.cartItems)
+        
+        if(context.stateUser.isAuthenticated) {
+            setUser(context.stateUser.user.userId)
+        }else {
+            props.navigation.navigate("Cart")
+            Toast.show({
+                topOffset: 60,
+                type: "error",
+                text1:"Por favor inicie sesion para comprar",
+                text2: ""
+            })
+        }
 
         return() => {
             setOrderItems();
@@ -45,7 +61,9 @@ const Checkout = (props) => {
             phone,
             shippingAddress1: address,
             shippingAddress2: address2,
+            user,
             zip,
+            status: "3",
         }
         //redirige a la seccion de pago y le pasamos el objeto que contiene los datos del formulario
         props.navigation.navigate("Pago", {order: order })

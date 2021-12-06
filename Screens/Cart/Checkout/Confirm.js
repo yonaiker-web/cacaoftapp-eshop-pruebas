@@ -5,6 +5,9 @@ import { Text, Left, Right, ListItem, Thumbnail, Body } from "native-base";
 //para realizar la conexion con el storage de redux 
 import { connect } from 'react-redux'
 import * as actions from "../../../Redux/Actions/cartActions";
+import Toast from "react-native-toast-message";
+import axios from "axios";
+import baseURL from '../../../assets/common/baseURL';
 
 
 //obtenemos las dimensiones de la pantalla del celular
@@ -12,16 +15,39 @@ var { height, width } = Dimensions.get("window");
 
 const Confirm = (props) => {
 
-    //funcion para limpiar el carrito de compras y retornar al inicio de los pedidos del carrito de compras
-    const ConfirmOrder = () => {
-        setTimeout(() => {
-            props.clearCart()
-            props.navigation.navigate("Cart")
-        }, 500)
+    //obtenemos el formulario del metodo de pago
+    const finalOrder = props.route.params;
+
+    //funcion ppar guardar las ordenes en base de dato
+    const confirmOrder = () => {
+        //guardamos la orden
+        const order = finalOrder.order.order;
+        axios.post(`${baseURL}orders`, order)
+          .then((res) => {
+            if (res.status == 200 || res.status == 201) {
+              Toast.show({
+                topOffset: 60,
+                type: "success",
+                text1: "Orden Completada",
+                text2: "",
+              });
+              //limpiamos el carrito y volvemos 
+              setTimeout(() => {
+                props.clearCart();
+                props.navigation.navigate("Cart");
+              }, 500);
+            }
+          })
+          .catch((error) => {
+            Toast.show({
+              topOffset: 60,
+              type: "error",
+              text1: "Algo salio mal",
+              text2: "Por favor intente de nuevo",
+            });
+          });
     }
 
-    //console.log("props",props.route.params);
-    const confirm = props.route.params
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
@@ -35,15 +61,15 @@ const Confirm = (props) => {
                 ? <View style={{ borderWidth: 1, borderColor: 'orange' }}>
                     <Text style={styles.title}>Shipping to</Text>
                     <View style={{ padding: 8}}>
-                        <Text>Direccion 1: { confirm.order.order.shippingAddress1 }</Text>
-                        <Text>Direccion 2: { confirm.order.order.shippingAddress2 }</Text>
-                        <Text>Ciudad: { confirm.order.order.city }</Text>
-                        <Text>Codigo Postal: { confirm.order.order.zip }</Text>
-                        <Text>Pais: { confirm.order.order.country }</Text>
+                        <Text>Direccion 1: { finalOrder.order.order.shippingAddress1 }</Text>
+                        <Text>Direccion 2: { finalOrder.order.order.shippingAddress2 }</Text>
+                        <Text>Ciudad: { finalOrder.order.order.city }</Text>
+                        <Text>Codigo Postal: { finalOrder.order.order.zip }</Text>
+                        <Text>Pais: { finalOrder.order.order.country }</Text>
                     </View>
 
                     <Text style={styles.title}>Elementos: </Text>
-                    {confirm.order.order.orderItems.map((x) => {
+                    {finalOrder.order.order.orderItems.map((x) => {
                         return (
                             <ListItem
                                 style={styles.listItem}
@@ -68,7 +94,7 @@ const Confirm = (props) => {
                 : null }
 
                 <View style={{ alignItems: 'center', margin: 20 }}>
-                    <Button title={'Realizar Pedido'} onPress={ConfirmOrder}/>
+                    <Button title={'Realizar Pedido'} onPress={confirmOrder}/>
                 </View>
             </View>
         </ScrollView>

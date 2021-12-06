@@ -8,12 +8,37 @@ import Toast from 'react-native-toast-message'
 import { connect } from 'react-redux'
 //importamos las acciones que usara el carrito de compras
 import * as actions from '../../Redux/Actions/cartActions'
+//archivo que contiene estilos para los botones
+import EasyButton from '../../Shared/StyledComponents/EasyButton'
+//
+import TrafficLight from '../../Shared/StyledComponents/TrafficLight'
 
 const SingleProduct = (props) => {
 
     const [item, setitem] = useState(props.route.params.item)
     //console.log(item.image);
-    const [availability, setAvailability] = useState('')
+    const [availability, setAvailability] = useState(null)
+    const [availabilityText, setAvailabilityText] = useState("")
+
+    //valida dependiendo la cantidad de articulos que halla calcula si el producto es disponible, limitado o indisponible
+    useEffect(() => {
+        if (props.route.params.item.countInStock == 0){
+            setAvailability(<TrafficLight unavailable></TrafficLight>)
+            setAvailabilityText("Indisponible")
+        }
+        else if(props.route.params.item.countInStock <= 5) {
+            setAvailability(<TrafficLight limited></TrafficLight>)
+            setAvailabilityText("Limitado")
+        }
+        else {
+            setAvailability(<TrafficLight available></TrafficLight>)
+            setAvailabilityText("Disponible")
+        }
+        return () => {
+            setAvailability(null)
+             setAvailabilityText("")
+        }
+    }, [])
 
     return (
         <Container style={styles.container}>
@@ -32,6 +57,18 @@ const SingleProduct = (props) => {
                         <H1 style={styles.contentHeader}>{item.name}</H1>
                         <Text style={styles.contentText}>{item.brand}</Text>
                 </View>
+                    
+                {/*muestra con color si esta disponible, limitado o indisponible */}    
+                <View style={styles.availabilityContainer}>
+                    <View style={styles.availability}> 
+                        <Text style={{ marginRight: 10}}>
+                            Disponibilidad: {availabilityText}
+                        </Text>
+                        {availability}
+                    </View>
+                    <Text>{item.description}</Text>
+                </View>
+
             </ScrollView>
             
 
@@ -40,8 +77,9 @@ const SingleProduct = (props) => {
                     <Text style={styles.price}>${item.price}</Text>
                 </Left>
                 <Right>
-                    <Button 
-                        title="Agregar"
+                    <EasyButton 
+                        primary
+                        medium
                         onPress={() => {
                             props.addItemToCart(item),
                             Toast.show({
@@ -51,7 +89,9 @@ const SingleProduct = (props) => {
                                 text2: "Ve al carrito para completar la orden"
                             })
                         }}
-                    />
+                    >
+                        <Text style={{ color: "white"}}>Agregar</Text>
+                    </EasyButton>
                 </Right>
             </View>
         </Container>

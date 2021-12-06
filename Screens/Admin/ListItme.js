@@ -1,7 +1,9 @@
-//archivo que ordena los productos exportados desdes la base de datos - Screens/Admin/Products
+//archivo que ordena los productos exportados desdes la base de datos - LisItem
 import React, { useState } from 'react'
 import { StyleSheet, Text, View, Image, TouchableOpacity,TouchableHighlight, Dimensions, Button, ScrollView, Modal } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
+//archivo que contiene estilos para los botones
+import EasyButton from '../../Shared/StyledComponents/EasyButton'
 
 var { height, width } = Dimensions.get("window")
 
@@ -9,8 +11,10 @@ const ListItme = (props) => {
 
     const [modalVisible, setModalVisible] = useState(false)
 
+    //console.log("PROPS", props);
     return (
         <View >
+            {/*cuadro al mantener presionado un producto */}
             <Modal
                 animationType="fade"
                 transparent={true}
@@ -36,15 +40,27 @@ const ListItme = (props) => {
                         >
                             <Icon name="close" size={20} />
                         </TouchableOpacity>
-                        <Button title="Editar"
-                            onPress={() => [
-                                props.navigation.navigate("ProductForm"),
+                        
+                        {/*boton para editar */}
+                        <EasyButton 
+                            medium 
+                            secondary
+                            onPress={() => {
+                                props.navigation.navigate("Formulario de Productos", { item: props}),
                                 setModalVisible(false)
-                            ]}                            
-                        />
-                        <Button title="Eliminar"
-                            //eliminar
-                        />
+                            }}
+                        >  
+                          <Text style={styles.textStyle}>Editar</Text>
+                        </EasyButton>
+
+                        {/*boton para eliminar */}
+                        <EasyButton 
+                            medium 
+                            danger
+                            onPress={() => [props.delete(props.id), setModalVisible(false)]}
+                        >  
+                          <Text style={styles.textStyle}>Eliminar</Text>
+                        </EasyButton>
                     </View>
                 </View>
             </Modal>

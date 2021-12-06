@@ -5,6 +5,8 @@ import { StyleSheet, Text, View, Button } from 'react-native'
 import FormContainer from '../../Shared/Form/FormContainer'
 import Input from '../../Shared/Form/Input'
 import Error from '../../Shared/Error'
+//archivo que contiene estilos para los botones
+import EasyButton from '../../Shared/StyledComponents/EasyButton'
 
 //Context
 import AuthGlobal from '../../Context/store/AuthGlobal'
@@ -15,9 +17,9 @@ const Login = (props) => {
     const context = useContext(AuthGlobal)
 
     //estado que almacena el email que ingrese en el formulario
-    const [email, setEmail] = useState('')
+    const [email, setEmail] = useState("")
     //estado que almacena la contraseña que ingrese en el formulario
-    const [password, setPassword] = useState('')
+    const [password, setPassword] = useState("")
     //estado que almacena si ocurre algun error en el formulario
     const [error, setError] = useState("")
 
@@ -31,7 +33,7 @@ const Login = (props) => {
     const handleSubmit = () => {
         const user = {
             email,
-            password
+            password,
         }
 
         if (email === "" || password === "") {
@@ -39,7 +41,7 @@ const Login = (props) => {
         }else {
             loginUser(user, context.dispatch)
         }
-    }
+    };
 
     return (
         //formulario de login
@@ -57,26 +59,32 @@ const Login = (props) => {
                 placeholder={"Ingresa tu contraseña"}
                 name={"password"}
                 id={"password"}
-                value={password}
                 secureTextEntry={true}
+                value={password}
                 onChangeText={(text) => setPassword(text)}
             />
-            <View style={[styles.buttonGroup, {marginTop: 30}]}> 
+            <View style={[styles.buttonGroup, {marginTop: 0}]}> 
                 {/*si el estado error tiene algo le pasamos la propiedad del error al componente Error */}
-                {error ? <Error message={error}/> : null} 
-                <Button 
-                    title="Acceder"
+                {error ? <Error message={error} /> : null} 
+                <EasyButton 
+                    primary
+                    large
                     onPress={() => handleSubmit()}
-                />
+                >
+                    <Text style={{ color: "white"}}>Acceder</Text>
+                </EasyButton>
             </View>
-            <View style={[styles.buttonGroup, {marginTop: 40}]}>  
+            <View style={[styles.buttonGroup, {marginTop: 20}]}>  
                 <Text style={styles.middleText}>
                     ¿Aún no tienes una cuenta?
                 </Text>
-                <Button 
-                    title="Registrate" 
+                <EasyButton 
+                    secondary
+                    large
                     onPress={() => props.navigation.navigate("Register")}
-                />
+                >
+                    <Text>Registrarse</Text>
+                </EasyButton>
             </View>
         </FormContainer>
     )

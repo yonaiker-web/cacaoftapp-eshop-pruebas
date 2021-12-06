@@ -9,6 +9,7 @@ import ListItme from './ListItme'
 import axios from 'axios'
 import baseURL from '../../assets/common/baseURL'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import EasyButton from '../../Shared/StyledComponents/EasyButton'
 
 var { height, width } = Dimensions.get("window")
 
@@ -90,8 +91,54 @@ const Products = (props) => {
         )
     }
 
+    //funcion para eliminar un producto de la base de datos
+    const deleteProduct = (id) => {
+        axios.delete(`${baseURL}products/${id}`, {
+            headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((res) => {
+            const products = productFilter.filter((item) => item.id !== id)
+            setProductFilter(products)
+        })
+        .catch((error) => console.log(error))
+    }
+
+    //console.log("TOKEN", token)
     return (
-        <View>
+        <View style={styles.container}>
+            {/*barra superficial */}
+            <View style={styles.buttonContainer}>
+                {/*boton de ordenes */}
+                <EasyButton
+                    secondary
+                    medium
+                    onPress={() => props.navigation.navigate("Ordenes")}
+                >
+                    <Icon name="shopping-bag" size={18} color="white" />
+                    <Text style={styles.buttonText}>Ordenes</Text>
+                </EasyButton>
+
+                {/*boton de productos */}
+                <EasyButton
+                    secondary
+                    medium
+                    onPress={() => props.navigation.navigate("Formulario de Productos")}
+                >
+                    <Icon name="plus" size={18} color="white" />
+                    <Text style={styles.buttonText}>Productos</Text>
+                </EasyButton>
+
+                {/*boton de catgorias */}
+                <EasyButton
+                    secondary
+                    medium
+                    onPress={() => props.navigation.navigate("Categorias")}
+                >
+                    <Icon name="plus" size={18} color="white" />
+                    <Text style={styles.buttonText}>Categorias</Text>
+                </EasyButton>
+            </View>
+
             <View>
                 {/*creamos la barra de busqueda */}
                 <Header searchBar rounded>
@@ -121,6 +168,7 @@ const Products = (props) => {
                             {...item}
                             navigation={props.navigation}
                             index={index}
+                            delete={deleteProduct}
                         />
                     )}
                     keyExtractor={(item) => item.id}

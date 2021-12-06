@@ -5,7 +5,7 @@ import { Container, Header, Content, ListItem, Text, Radio, Right, Left, Picker,
 
 //los metodos de pago que ofrece la app
 const methods = [
-    { name: 'Contra reembolso', value: 1 },
+    { name: 'Efectivo', value: 1 },
     { name: 'Transferencia bancaria', value: 2 },
     { name: 'Pago con tarjeta', value: 3 }
 ]
@@ -73,7 +73,8 @@ const Payment = (props) => {
                        <Button 
                        title={"Confirmar"} 
                        onPress={() => props.navigation.navigate("Confirmar", { order }, 
-                       console.log("CONFIRM",order))}
+                       //console.log("CONFIRM",order)
+                       )}
                        />
                 </View>
             </Content>

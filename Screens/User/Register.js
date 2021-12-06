@@ -6,6 +6,8 @@ import Toast from 'react-native-toast-message'
 
 import axios from 'axios'
 import baseURL from '../../assets/common/baseURL'
+//archivo que contiene estilos para los botones
+import EasyButton from '../../Shared/StyledComponents/EasyButton'
 
 import FormContainer from '../../Shared/Form/FormContainer'
 import Input from '../../Shared/Form/Input'
@@ -113,16 +115,23 @@ const Register = (props) => {
                     {error ? <Error message={error}/> : null} 
                 </View>
                 <View style={styles.buttonGroup}>
-                    <Button 
-                        title="Registrarse"
+                    <EasyButton 
+                        primary
+                        large
                         onPress={() => register()}
-                    />
+                    >
+                        <Text style={{ color: "white"}}>Registrase</Text>
+                    </EasyButton>
                 </View>
                 <View style={styles.buttonGroup}>
-                    <Button  
-                        title={"Ir a Login"} 
+                    <Text style={{ marginBottom: 10}}>Ya tienes una cuenta</Text>
+                    <EasyButton  
+                        secondary
+                        large 
                         onPress={() => props.navigation.navigate("Login")}
-                    />
+                    >   
+                        <Text style={{ color: "white"}}>Ir a Acceder</Text>
+                    </EasyButton>
                 </View>
             </FormContainer>
         </KeyboardAwareScrollView>

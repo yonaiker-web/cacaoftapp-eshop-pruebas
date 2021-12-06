@@ -7,6 +7,8 @@ import Toast from 'react-native-toast-message'
 import { connect } from 'react-redux'
 //importamos las acciones que usara el carrito de compras
 import * as actions from '../../Redux/Actions/cartActions'
+//archivo que contiene estilos para los botones
+import EasyButton from '../../Shared/StyledComponents/EasyButton'
 
 //obtenemos las dimensiones de la pantalla del celular
 var { width } = Dimensions.get("window");
@@ -34,9 +36,9 @@ const ProductCard = (props) => {
             { countInStock > 0
             ? (
                 <View style={{ marginBottom: 60 }}>
-                    <Button 
-                        title={'Agregar'} 
-                        color={'green'} 
+                    <EasyButton 
+                        primary
+                        medium
                         onPress={() => {
                             props.addItemToCart(props),
                             Toast.show({
@@ -46,7 +48,9 @@ const ProductCard = (props) => {
                                 text2: "Ve al carrito para completar la orden"
                             })
                         }}
-                    />
+                    >
+                        <Text style={{ color: "white"}}>Agregar</Text>
+                    </EasyButton>
                 </View>
             )
             : <Text style={{ marginTop: 20 }}>Actualmente no disponible</Text>}

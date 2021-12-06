@@ -21,15 +21,15 @@ function MyStack()  {
                 }}
             />
             <Stack.Screen 
-                name="Categories"
+                name="Categorias"
                 component={Categories}
             />
             <Stack.Screen 
-                name="Order"
+                name="Ordenes"
                 component={Order}
             />
             <Stack.Screen 
-                name="ProductForm"
+                name="Formulario de Productos"
                 component={ProductForm}
             />
         </Stack.Navigator>
