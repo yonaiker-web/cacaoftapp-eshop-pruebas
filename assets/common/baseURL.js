@@ -1,7 +1,7 @@
 //archivo que conecta la app con la base de datos en la ruta espesificada
 import { Platform } from "react-native";
 
-let baseURL = 'https://cacapftapp-backend.herokuapp.com/api/v1/';
+let baseURL = 'url';
 
 /* {Platform.OS == 'android'
 ? baseURL = 'http://192.168.8.101:3010/api/v1/'
